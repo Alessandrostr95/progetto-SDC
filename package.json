@@ -28,6 +28,8 @@
   },
   "homepage": "https://github.com/Alessandrostr95/progetto-SDC#readme",
   "dependencies": {
+    "@openzeppelin/contracts": "^4.4.2",
+    "@truffle/contract": "^4.4.6",
     "web3": "^1.7.0"
   }
 }
