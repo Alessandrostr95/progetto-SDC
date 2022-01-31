@@ -1,0 +1,33 @@
+{
+  "name": "progetto-sdc",
+  "version": "1.0.0",
+  "description": "Progetto SDC Straziota-Cirillo",
+  "main": "main.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alessandrostr95/progetto-SDC.git"
+  },
+  "keywords": [
+    "SDC",
+    "blockchain",
+    "ethereum",
+    "smart-contract",
+    "greepass",
+    "certification"
+  ],
+  "author": "Alessandro Straziota - Michele Cirillo",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Alessandrostr95/progetto-SDC/issues"
+  },
+  "homepage": "https://github.com/Alessandrostr95/progetto-SDC#readme",
+  "dependencies": {
+    "web3": "^1.7.0"
+  }
+}
