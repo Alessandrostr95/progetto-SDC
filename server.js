@@ -246,7 +246,7 @@ app.post('/api/v1/privileges/grat/public_administration_role', async (req, res) 
  * la richiesta viene accettata.
  * Altrimenti, la richiesta viene rifiutata e l'utente riceverà un messaggio di errore.
  */
- app.post('/api/v1/privileges/revoke/public_administration_role', async (req, res) => {
+app.post('/api/v1/privileges/revoke/public_administration_role', async (req, res) => {
     try {
         const data = req.body;
         const to = data.to;
