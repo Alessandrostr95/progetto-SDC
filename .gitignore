@@ -108,3 +108,6 @@ librerie-utili
 
 # contracts
 build/contracts/
+
+# .DS_Store file created by the macOS Finder
+.DS_Store
