@@ -105,9 +105,9 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * @param activity l'attività in questione.
    */
   function addRule(CertificationType certificationType, Colors color, Activities activity) public onlyRole(PUBLIC_ADMINISTRATION_ROLE) {
-    Rule memory role = Rule(certificationType, color, activity);
-    bytes32 key = keccak256( abi.encodePacked(role.certificationType, role.color, role.activity) );
-    _rules[key] = role;
+    Rule memory rule = Rule(certificationType, color, activity);
+    bytes32 key = keccak256( abi.encodePacked(rule.certificationType, rule.color, rule.activity) );
+    _rules[key] = rule;
     EnumerableSet.add(_rulesSet, key);
   }
 
@@ -119,8 +119,8 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * @param activity l'attività in questione.
    */
   function removeRule(CertificationType certificationType, Colors color, Activities activity) public onlyRole(PUBLIC_ADMINISTRATION_ROLE) {
-    Rule memory role = Rule(certificationType, color, activity);
-    bytes32 key = keccak256( abi.encodePacked(role.certificationType, role.color, role.activity) );
+    Rule memory rule = Rule(certificationType, color, activity);
+    bytes32 key = keccak256( abi.encodePacked(rule.certificationType, rule.color, rule.activity) );
     if( EnumerableSet.remove(_rulesSet, key) ) {
       delete _rules[key];
     }
@@ -144,8 +144,8 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
     }
     
     Colors regionColors = colors[region];
-    Rule memory role = Rule(greenPass.certificationType, regionColors, activity);
-    bytes32 key = keccak256( abi.encodePacked(role.certificationType, role.color, role.activity) );
+    Rule memory rule = Rule(greenPass.certificationType, regionColors, activity);
+    bytes32 key = keccak256( abi.encodePacked(rule.certificationType, rule.color, rule.activity) );
     
     if ( EnumerableSet.contains(_rulesSet, key) ) return true;
     else return false;
