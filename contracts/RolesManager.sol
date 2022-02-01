@@ -22,7 +22,6 @@ contract RolesManager is AccessControl {
    * @param to indirizzo a cui assegnare ruolo `CERTIFICATION_MINTER_ROLE`.
    */
   function grantCertificationMinterRole(address to) public onlyRole(ADMIN_ROLE) {
-    //require(hasRole(ADMIN_ROLE, msg.sender), "INVALID ROLE: ONLY ADMIN CAN GRANT THIS ROLE");
     _grantRole(CERTIFICATION_MINTER_ROLE, to);
   }
 
@@ -33,7 +32,6 @@ contract RolesManager is AccessControl {
    * @param to indirizzo a cui assegnare ruolo `CERTIFICATION_MINTER_ROLE`.
    */
   function revokeCertificationMinterRole(address to) public onlyRole(ADMIN_ROLE) {
-    //require(hasRole(ADMIN_ROLE, msg.sender), "INVALID ROLE: ONLY ADMIN CAN REVOKE THIS ROLE");
     _revokeRole(CERTIFICATION_MINTER_ROLE, to);
   }
 

@@ -109,12 +109,19 @@ app.get('/api/v1/certification/enum/certification_types', async (_, res) => {
     }
 });
 
+/**
+ * @app Api che consente di registrare un greenpass nella blockchain.
+ * Chi chiama l'api deve fornire un greenpass, una tipologia di greenpass e una chiave privata di un address della blockchain.
+ * Se la chiave privata è associata ad un address autorizzato alla registrazione di greenpass,
+ * la richiesta viene accettata e il greenpass viene registrato.
+ * Altrimenti, la richiesta viene rifiutata e l'utente riceverà un messaggio di errore.
+ */
 app.post('/api/v1/certification/emit', async (req, res) => {
     try {
-        const certification = req.body;
-        const greenpass = certification.greenpass;
-        const certificationType = certification.certificationType;
-        const privateKey = certification.privateKey;
+        const data = req.body;
+        const greenpass = data.greenpass;
+        const certificationType = data.certificationType;
+        const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
         const contract = await Contracts.GreenPassCertification.deployed();
@@ -122,6 +129,135 @@ app.post('/api/v1/certification/emit', async (req, res) => {
         res.status(200).json({
             status: true, 
             data: {transaction, greenpass, certificationType, privateKey, pubKey}
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: e.message
+        });
+    }
+});
+
+/**
+ * @app Api che consente di assegnare il ruolo di `CERTIFICATION_MINTER_ROLE` ad un address.
+ * Tele ruolo permetterà all'address di emettere greenpass.
+ * Chi chiama l'api deve fornire una chiave privata di un address della blockchain.
+ * Se la chiave privata è associata ad un address autorizzato all'assegnazione del ruolo,
+ * la richiesta viene accettata e l'address indicato nella richiesta riceverà il ruolo.
+ * Altrimenti, la richiesta viene rifiutata e l'utente riceverà un messaggio di errore.
+ */
+app.post('/api/v1/privileges/grat/certification_minter_role', async (req, res) => {
+    try {
+        const data = req.body;
+        const to = data.to;
+        const privateKey = data.privateKey;
+
+        const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
+        const contract = await Contracts.GreenPassCertification.deployed();
+        const transaction = await contract.grantCertificationMinterRole(to, {from: pubKey});
+        res.status(200).json({
+            status: true,
+            data: {
+                transaction,
+                role: "CERTIFICATION_MINTER_ROLE",
+                to, 
+                privateKey, 
+                pubKey
+            }
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: e.message
+        });
+    }
+});
+
+/**
+ * @app Api che consente di revocare il ruolo di `CERTIFICATION_MINTER_ROLE` ad un address.
+ * Chi chiama l'api deve fornire una chiave privata di un address della blockchain.
+ * Se la chiave privata è associata ad un address autorizzato alla revoca del ruolo,
+ * la richiesta viene accettata.
+ * Altrimenti, la richiesta viene rifiutata e l'utente riceverà un messaggio di errore.
+ */
+app.post('/api/v1/privileges/revoke/certification_minter_role', async (req, res) => {
+    try {
+        const data = req.body;
+        const to = data.to;
+        const privateKey = data.privateKey;
+
+        const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
+        const contract = await Contracts.GreenPassCertification.deployed();
+        const transaction = await contract.revokeCertificationMinterRole(to, {from: pubKey});
+        res.status(200).json({
+            status: true,
+            data: {
+                transaction,
+                role: "CERTIFICATION_MINTER_ROLE",
+                to,
+                privateKey,
+                pubKey
+            }
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: e.message
+        });
+    }
+});
+
+/**
+ * @app Api che consente di assegnare il ruolo di `PUBLIC_ADMINISTRATION_ROLE` ad un address.
+ * Tele ruolo permetterà all'address di effettuare compiti della pubblica amministrazione,
+ * come per esempio la gestione dei colori della regioni, la definizione delle nuove regole, ecc.
+ * Chi chiama l'api deve fornire una chiave privata di un address della blockchain.
+ * Se la chiave privata è associata ad un address autorizzato all'assegnazione del ruolo,
+ * la richiesta viene accettata e l'address indicato nella richiesta riceverà il ruolo.
+ * Altrimenti, la richiesta viene rifiutata e l'utente riceverà un messaggio di errore.
+ */
+app.post('/api/v1/privileges/grat/public_administration_role', async (req, res) => {
+    try {
+        const data = req.body;
+        const to = data.to;
+        const privateKey = data.privateKey;
+
+        const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
+        const contract = await Contracts.GreenPassCertification.deployed();
+        const transaction = await contract.grantPublicAdministrationRole(to, {from: pubKey});
+        res.status(200).json({
+            status: true,
+            data: {
+                transaction,
+                role: "PUBLIC_ADMINISTRATION_ROLE",
+                to,
+                privateKey,
+                pubKey
+            }
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: e.message
+        });
+    }
+});
+
+/**
+ * @app Api che consente di revocare il ruolo di `PUBLIC_ADMINISTRATION_ROLE` ad un address.
+ * Chi chiama l'api deve fornire una chiave privata di un address della blockchain.
+ * Se la chiave privata è associata ad un address autorizzato alla revoca del ruolo,
+ * la richiesta viene accettata.
+ * Altrimenti, la richiesta viene rifiutata e l'utente riceverà un messaggio di errore.
+ */
+ app.post('/api/v1/privileges/revoke/public_administration_role', async (req, res) => {
+    try {
+        const data = req.body;
+        const to = data.to;
+        const privateKey = data.privateKey;
+
+        const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
+        const contract = await Contracts.GreenPassCertification.deployed();
+        const transaction = await contract.revokePublicAdministrationRole(to, {from: pubKey});
+        res.status(200).json({
+            status: true,
+            data: {transaction, role, privateKey, pubKey}
         });
     } catch (e) {
         res.status(500).json({
