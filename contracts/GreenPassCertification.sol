@@ -117,13 +117,16 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * @param certificationType il tipo della certificazione.
    * @param color il colore della regione.
    * @param activity l'attività in questione.
+   * @return `true` se la regola esisteva e viene rimosso, `false` altrimenti.
    */
-  function removeRule(CertificationType certificationType, Colors color, Activities activity) public onlyRole(PUBLIC_ADMINISTRATION_ROLE) {
+  function removeRule(CertificationType certificationType, Colors color, Activities activity) public onlyRole(PUBLIC_ADMINISTRATION_ROLE) returns (bool) {
     Rule memory rule = Rule(certificationType, color, activity);
     bytes32 key = keccak256( abi.encodePacked(rule.certificationType, rule.color, rule.activity) );
     if( EnumerableSet.remove(_rulesSet, key) ) {
       delete _rules[key];
+      return true;
     }
+    return false;
   }
 
   /// *********
