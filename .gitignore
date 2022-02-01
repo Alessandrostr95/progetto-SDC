@@ -105,3 +105,6 @@ dist
 
 # altri file inutili
 librerie-utili
+
+# contracts
+build/contracts/
