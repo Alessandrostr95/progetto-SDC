@@ -1,0 +1,24 @@
+GET http://localhost:30303/api/v1/certification/enum/activities HTTP/1.1
+
+###
+
+GET http://localhost:30303/api/v1/certification/enum/regions HTTP/1.1
+
+###
+
+GET http://localhost:30303/api/v1/certification/enum/colors HTTP/1.1
+
+###
+
+GET http://localhost:30303/api/v1/certification/enum/certification_types HTTP/1.1
+
+###
+
+POST http://localhost:30303/api/v1/certification/canDo HTTP/1.1
+content-type: application/json
+
+{
+    "greenpass": "cde22fdeef083b21eb14230052415cb3c94751a16fb926fbc3b6b22d835e2639",
+    "activity": "BAR_E_RISTORANTI",
+    "region": "MARCHE"
+}
