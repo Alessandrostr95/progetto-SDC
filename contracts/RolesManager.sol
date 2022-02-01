@@ -10,6 +10,7 @@ contract RolesManager is AccessControl {
   // ROLES
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
   bytes32 public constant CERTIFICATION_MINTER_ROLE = keccak256("CERTIFICATION_MINTER_ROLE");
+  bytes32 public constant PUBLIC_ADMINISTRATION_ROLE = keccak256("PUBLIC_ADMINISTRATION_ROLE");
 
   constructor () {
     _setupRole(ADMIN_ROLE, msg.sender);
@@ -34,5 +35,24 @@ contract RolesManager is AccessControl {
   function revokeCertificationMinterRole(address to) public onlyRole(ADMIN_ROLE) {
     //require(hasRole(ADMIN_ROLE, msg.sender), "INVALID ROLE: ONLY ADMIN CAN REVOKE THIS ROLE");
     _revokeRole(CERTIFICATION_MINTER_ROLE, to);
+  }
+
+  /**
+   * @dev funzione che assegna il ruolo `PUBLIC_ADMINISTRATION_ROLE` che consente di gestire le regole e i colori delle regioni.
+   * Questo metodo può essere invocato solamente dagli indirizzi con il ruolo `ADMIN_ROLE`.
+   * @param to indirizzo a cui assegnare ruolo `PUBLIC_ADMINISTRATION_ROLE`.
+   */
+  function grantPublicAdministrationRole(address to) public onlyRole(ADMIN_ROLE) {
+    _grantRole(PUBLIC_ADMINISTRATION_ROLE, to);
+  }
+
+  /**
+   * @dev funzione che revoca il ruolo `PUBLIC_ADMINISTRATION_ROLE` ad un indirizzo.
+   * Questo metodo può essere invocato solamente dagli indirizzi con il ruolo `ADMIN_ROLE`.
+   * See {grantCertificationMinterRole}.
+   * @param to indirizzo a cui assegnare ruolo `PUBLIC_ADMINISTRATION_ROLE`.
+   */
+  function revokePublicAdministrationRole(address to) public onlyRole(ADMIN_ROLE) {
+    _revokeRole(PUBLIC_ADMINISTRATION_ROLE, to);
   }
 }

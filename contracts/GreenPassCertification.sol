@@ -65,7 +65,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * @dev Funzione che assegna il colore `color` alla regione `region`.
    * Solo un indirizzo con ruolo `ADMIN_ROLE` può invocare questa funzione.
    */
-  function setRegionColor(Regions region, Colors color) public onlyRole(ADMIN_ROLE) {
+  function setRegionColor(Regions region, Colors color) public onlyRole(PUBLIC_ADMINISTRATION_ROLE) {
     colors[region] = color;
   }
 
@@ -104,7 +104,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * @param color il colore della regione.
    * @param activity l'attività in questione.
    */
-  function addRule(CertificationType certificationType, Colors color, Activities activity) public onlyRole(ADMIN_ROLE) {
+  function addRule(CertificationType certificationType, Colors color, Activities activity) public onlyRole(PUBLIC_ADMINISTRATION_ROLE) {
     Rule memory role = Rule(certificationType, color, activity);
     bytes32 key = keccak256( abi.encodePacked(role.certificationType, role.color, role.activity) );
     _rules[key] = role;
@@ -118,7 +118,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * @param color il colore della regione.
    * @param activity l'attività in questione.
    */
-  function removeRule(CertificationType certificationType, Colors color, Activities activity) public onlyRole(ADMIN_ROLE) {
+  function removeRule(CertificationType certificationType, Colors color, Activities activity) public onlyRole(PUBLIC_ADMINISTRATION_ROLE) {
     Rule memory role = Rule(certificationType, color, activity);
     bytes32 key = keccak256( abi.encodePacked(role.certificationType, role.color, role.activity) );
     if( EnumerableSet.remove(_rulesSet, key) ) {
