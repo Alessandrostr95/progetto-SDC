@@ -56,7 +56,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    */
   function invalidateCertificate(string memory qrcode) public onlyRole(CERTIFICATION_MINTER_ROLE) {
     //require(hasRole(CERTIFICATION_MINTER_ROLE, msg.sender), "ONLY AUTHORIZED ENTITIES CAN INVALIDATE A CERTIFICATION");
-    certificates[qrcode].invalidated = true;
+    certificates[qrcode].revoked = true;
   }
 
   /// *********
@@ -139,7 +139,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    */
   function canDo(string memory qrcode, Activities activity, Regions region) public view returns (bool) {
     GreenPass memory greenPass = certificates[qrcode]; // verificare che succede se non esiste il green pass in questione.
-    if (isExpired(qrcode) || greenPass.invalidated) {
+    if (isExpired(qrcode) || greenPass.revoked) {
       return false;
     }
     

@@ -14,7 +14,7 @@ contract Certification {
         CertificationType certificationType;
         uint256 creation;
         uint duration;
-        bool invalidated;
+        bool revoked;
     }
 
     mapping (CertificationType => uint) public durations;
