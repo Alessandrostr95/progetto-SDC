@@ -266,4 +266,108 @@ app.post('/api/v1/privileges/grat/public_administration_role', async (req, res) 
     }
 });
 
+/**
+ * @app Api che consente di modificare il colore di una regione.
+ * Chi chiama l'api deve fornire una chiave privata di un address della blockchain.
+ * Se la chiave privata è associata ad un address autorizzato alla modifica del colore,
+ * la richiesta viene accettata.
+ * Altrimenti, la richiesta viene rifiutata e l'utente riceverà un messaggio di errore.
+ */
+app.post('/api/v1/administration/region/set_color', async (req, res) => {
+    try {
+        const data = req.body;
+        const region = data.region;
+        const color = data.color;
+        const privateKey = data.privateKey;
+
+        const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
+        const contract = await Contracts.GreenPassCertification.deployed();
+        const transaction = await contract.setRegionColor(region, color, {from: pubKey});
+        res.status(200).json({
+            status: true,
+            data: {
+                transaction,
+                region,
+                color,
+                privateKey,
+                pubKey
+            }
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: e.message
+        });
+    }
+});
+
+/**
+ * @app Api che consente di aggiungere una nuova regola.
+ * Chi chiama l'api deve fornire una chiave privata di un address della blockchain.
+ * Se la chiave privata è associata ad un address autorizzato all'aggiunta di una nuova regola,
+ * la richiesta viene accettata.
+ * Altrimenti, la richiesta viene rifiutata e l'utente riceverà un messaggio di errore.
+ */
+app.post('/api/v1/administration/rules/add', async (req, res) => {
+    try {
+        const data = req.body;
+        const certificationType = data.certificationType;
+        const activity = data.activity;
+        const color = data.color;
+        const privateKey = data.privateKey;
+
+        const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
+        const contract = await Contracts.GreenPassCertification.deployed();
+        const transaction = await contract.addRule(certificationType, activity, color, {from: pubKey});
+        res.status(200).json({
+            status: true,
+            data: {
+                transaction,
+                certificationType,
+                activity,
+                color,
+                privateKey,
+                pubKey
+            }
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: e.message
+        });
+    }
+});
+
+/**
+ * @app Api che consente di rimuovere una regola.
+ * Chi chiama l'api deve fornire una chiave privata di un address della blockchain.
+ * Se la chiave privata è associata ad un address autorizzato alla rimozione di una regola,
+ * la richiesta viene accettata.
+ * Altrimenti, la richiesta viene rifiutata e l'utente riceverà un messaggio di errore.
+ */
+app.post('/api/v1/administration/rules/remove', async (req, res) => {
+    try {
+        const data = req.body;
+        const certificationType = data.certificationType;
+        const activity = data.activity;
+        const privateKey = data.privateKey;
+
+        const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
+        const contract = await Contracts.GreenPassCertification.deployed();
+        const transaction = await contract.removeRule(certificationType, activity, {from: pubKey});
+        res.status(200).json({
+            status: true,
+            data: {
+                transaction,
+                certificationType,
+                activity,
+                privateKey,
+                pubKey
+            }
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: e.message
+        });
+    }
+});
+
 app.listen(process.env.LISTEN_PORT, () => { console.log(`Hi! I'm listening on port ${process.env.LISTEN_PORT}`) });
