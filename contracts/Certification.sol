@@ -3,7 +3,7 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Certification {
     enum CertificationType {
-        TAMPONE, TAMPONE_RAPIDO,
+        TAMPONE_MOLECOLARE, TAMPONE_RAPIDO,
         VACCINO1, VACCINO2, VACCINO3,
         GUARITO, ALTRO
     }
@@ -19,7 +19,7 @@ contract Certification {
 
     mapping (CertificationType => uint) public durations;
     constructor () {
-        durations[CertificationType.TAMPONE] = 2 days;
+        durations[CertificationType.TAMPONE_MOLECOLARE] = 2 days;
         durations[CertificationType.TAMPONE_RAPIDO] = 2 days;
         durations[CertificationType.VACCINO1] = 16 weeks;
         durations[CertificationType.VACCINO2] = 16 weeks;
