@@ -30,7 +30,10 @@ app.post('/api/v1/certification/canDo', async (req, res) => {
             Contracts.Region.enums.Regions[region]
             );
         
-        res.status(200).json({greenpass, activity, region, canDo});
+        res.status(200).json({
+            status: true,
+            data: {greenpass, activity, region, canDo}
+            });
     } catch (e) {
         res.status(500).json({
             error: e.message
@@ -44,7 +47,10 @@ app.post('/api/v1/certification/canDo', async (req, res) => {
  */
 app.get('/api/v1/certification/enum/activities', async (_, res) => {
     try {
-        res.status(200).json( Object.keys(Contracts.Activity.enums.Activities) );
+        res.status(200).json({
+            status: true,
+            data: Object.keys(Contracts.Activity.enums.Activities)
+        });
     } catch (e) {
         res.status(500).json({
             error: e.message
@@ -58,7 +64,10 @@ app.get('/api/v1/certification/enum/activities', async (_, res) => {
  */
 app.get('/api/v1/certification/enum/regions', async (_, res) => {
     try {
-        res.status(200).json( Object.keys(Contracts.Region.enums.Regions) );
+        res.status(200).json({
+            status: true,
+            data: Object.keys(Contracts.Region.enums.Regions)
+        });
     } catch (e) {
         res.status(500).json({
             error: e.message
@@ -72,7 +81,10 @@ app.get('/api/v1/certification/enum/regions', async (_, res) => {
  */
 app.get('/api/v1/certification/enum/colors', async (_, res) => {
     try {
-        res.status(200).json( Object.keys(Contracts.Region.enums.Colors) );
+        res.status(200).json({
+            status: true,
+            data: Object.keys(Contracts.Region.enums.Colors)
+        });
     } catch (e) {
         res.status(500).json({
             error: e.message
@@ -86,7 +98,31 @@ app.get('/api/v1/certification/enum/colors', async (_, res) => {
  */
 app.get('/api/v1/certification/enum/certification_types', async (_, res) => {
     try {
-        res.status(200).json( Object.keys(Contracts.Certification.enums.CertificationType) );
+        res.status(200).json({
+            status: true,
+            data: Object.keys(Contracts.Certification.enums.CertificationType)
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: e.message
+        });
+    }
+});
+
+app.post('/api/v1/certification/emit', async (req, res) => {
+    try {
+        const certification = req.body;
+        const greenpass = certification.greenpass;
+        const certificationType = certification.certificationType;
+        const privateKey = certification.privateKey;
+
+        const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
+        const contract = await Contracts.GreenPassCertification.deployed();
+        const transaction = await contract.emitCertificate(certificationType, greenpass, {from: pubKey});
+        res.status(200).json({
+            status: true, 
+            data: {transaction, greenpass, certificationType, privateKey, pubKey}
+        });
     } catch (e) {
         res.status(500).json({
             error: e.message
