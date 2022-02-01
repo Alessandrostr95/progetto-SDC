@@ -104,7 +104,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * @param color il colore della regione.
    * @param activity l'attività in questione.
    */
-  function addRole(CertificationType certificationType, Colors color, Activities activity) public onlyRole(ADMIN_ROLE) {
+  function addRule(CertificationType certificationType, Colors color, Activities activity) public onlyRole(ADMIN_ROLE) {
     Rule memory role = Rule(certificationType, color, activity);
     bytes32 key = keccak256( abi.encodePacked(role.certificationType, role.color, role.activity) );
     _rules[key] = role;
@@ -118,7 +118,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * @param color il colore della regione.
    * @param activity l'attività in questione.
    */
-  function removeRole(CertificationType certificationType, Colors color, Activities activity) public onlyRole(ADMIN_ROLE) {
+  function removeRule(CertificationType certificationType, Colors color, Activities activity) public onlyRole(ADMIN_ROLE) {
     Rule memory role = Rule(certificationType, color, activity);
     bytes32 key = keccak256( abi.encodePacked(role.certificationType, role.color, role.activity) );
     if( EnumerableSet.remove(_rulesSet, key) ) {
@@ -148,7 +148,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
     bytes32 key = keccak256( abi.encodePacked(role.certificationType, role.color, role.activity) );
     
     if ( EnumerableSet.contains(_rulesSet, key) ) return true;
-    else return false; 
+    else return false;
   }
 
 }
