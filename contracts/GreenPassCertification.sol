@@ -54,7 +54,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * @dev Funzione che dato il QR-code di un green pass lo invalida.
    * Solo un indirizzo con ruolo `CERTIFICATION_MINTER_ROLE` può invocare questa funzione.
    */
-  function remokeCertificate(string memory qrcode) public onlyRole(CERTIFICATION_MINTER_ROLE) {
+  function revokeCertificate(string memory qrcode) public onlyRole(CERTIFICATION_MINTER_ROLE) {
     //require(hasRole(CERTIFICATION_MINTER_ROLE, msg.sender), "ONLY AUTHORIZED ENTITIES CAN INVALIDATE A CERTIFICATION");
     certificates[qrcode].revoked = true;
   }
