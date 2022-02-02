@@ -95,12 +95,10 @@
                 <h1>Informazioni sulla certificazione</h1>
 
                 <div class="validate-input mb-3" style="width: 100%;">
-                    <select class="custom-select" id="tipo" style="width: 100%;">
-                        <option selected disabled>Seleziona il tipo di certificazione</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                    <select class="custom-select" id="tipo_certificazione" name="tipo_certificazione" style="width: 100%;" required>
+                        <option selected disabled value="">Seleziona il tipo di certificazione</option>
                     </select>
+                    <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input">
@@ -137,7 +135,7 @@
     <!--===============================================================================================-->
     <script src="vendor/countdowntime/countdowntime.js"></script>
     <!--===============================================================================================-->
-    <script src="js/main.js"></script>
+    <script src="js/main.js" type="module"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
     <script>
@@ -147,6 +145,12 @@
 
         gtag('config', 'UA-23581568-13');
     </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js" type="module"></script>
 </body>
 
 </html>
