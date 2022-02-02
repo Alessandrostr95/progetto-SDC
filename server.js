@@ -6,8 +6,11 @@ global.web3 = web3;
 const Contracts = require('./src/models/contract');
 
 const express = require('express');
+const cors = require('cors');
+
 const app = express();
 app.use(express.json());
+app.use(cors({origin: '*'}));
 
 /**
  * @app Query allo smart contract.
