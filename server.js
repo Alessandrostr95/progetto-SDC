@@ -23,8 +23,8 @@ app.post('/api/v1/certification/canDo', async (req, res) => {
     try {
         const certification = req.body;
         const greenpass = certification.greenpass;
-        const activity = certification.activity;
-        const region = certification.region;
+        const activity = certification.activity;    // deve essere una stringa del tipo "MEZZI_PUBBLICI"
+        const region = certification.region;        // deve essere una stringa del tipo "LOMBARDIA"
 
         const contract = await Contracts.GreenPassCertification.deployed();
         const canDo = await contract.canDo(
@@ -123,12 +123,16 @@ app.post('/api/v1/certification/emit', async (req, res) => {
     try {
         const data = req.body;
         const greenpass = data.greenpass;
-        const certificationType = data.certificationType;
+        const certificationType = data.certificationType; // deve essere una strunga del tipo "TAMPONE_RAPIDO"
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
         const contract = await Contracts.GreenPassCertification.deployed();
-        const transaction = await contract.emitCertificate(certificationType, greenpass, {from: pubKey});
+        const transaction = await contract.emitCertificate(
+            Contracts.Certification.enums.CertificationType[certificationType],
+            greenpass,
+            {from: pubKey}
+            );
         res.status(200).json({
             status: true, 
             data: {transaction, greenpass, certificationType, privateKey, pubKey}
@@ -260,7 +264,12 @@ app.post('/api/v1/privileges/revoke/public_administration_role', async (req, res
         const transaction = await contract.revokePublicAdministrationRole(to, {from: pubKey});
         res.status(200).json({
             status: true,
-            data: {transaction, role, privateKey, pubKey}
+            data: {
+                transaction,
+                role: "PUBLIC_ADMINISTRATION_ROLE",
+                privateKey,
+                pubKey
+            }
         });
     } catch (e) {
         res.status(500).json({
@@ -279,13 +288,17 @@ app.post('/api/v1/privileges/revoke/public_administration_role', async (req, res
 app.post('/api/v1/administration/region/set_color', async (req, res) => {
     try {
         const data = req.body;
-        const region = data.region;
-        const color = data.color;
+        const region = data.region; // deve essre una stringa del tipo "PIEMONTE"
+        const color = data.color;   // deve essere una stringa del tipo "YELLOW"
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
         const contract = await Contracts.GreenPassCertification.deployed();
-        const transaction = await contract.setRegionColor(region, color, {from: pubKey});
+        const transaction = await contract.setRegionColor(
+            Contracts.Region.enums.Regions[region],
+            Contracts.Region.enums.Colors[color],
+            {from: pubKey}
+            );
         res.status(200).json({
             status: true,
             data: {
@@ -313,14 +326,19 @@ app.post('/api/v1/administration/region/set_color', async (req, res) => {
 app.post('/api/v1/administration/rules/add', async (req, res) => {
     try {
         const data = req.body;
-        const certificationType = data.certificationType;
-        const activity = data.activity;
-        const color = data.color;
+        const certificationType = data.certificationType;   // deve essere una stringa del tipo "TAMPONE_RAPIDO"
+        const color = data.color;                           // deve essere una stringa del tipo "YELLOW"
+        const activity = data.activity;                     // deve essere una stringa del tipo "MEZZI_PUBBLICI"
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
         const contract = await Contracts.GreenPassCertification.deployed();
-        const transaction = await contract.addRule(certificationType, activity, color, {from: pubKey});
+        const transaction = await contract.addRule(
+            Contracts.Certification.enums.CertificationType[certificationType],
+            Contracts.Region.Colors[color],
+            Contracts.Activity.enums.Activities[activity],
+            {from: pubKey}
+            );
         res.status(200).json({
             status: true,
             data: {
@@ -349,13 +367,19 @@ app.post('/api/v1/administration/rules/add', async (req, res) => {
 app.post('/api/v1/administration/rules/remove', async (req, res) => {
     try {
         const data = req.body;
-        const certificationType = data.certificationType;
-        const activity = data.activity;
+        const certificationType = data.certificationType;   // deve essere una stringa del tipo "TAMPONE_RAPIDO"
+        const color = data.color;                           // deve essere una stringa del tipo "YELLOW"
+        const activity = data.activity;                     // deve essere una stringa del tipo "MEZZI_PUBBLICI"
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
         const contract = await Contracts.GreenPassCertification.deployed();
-        const transaction = await contract.removeRule(certificationType, activity, {from: pubKey});
+        const transaction = await contract.removeRule(
+            Contracts.Certification.enums.CertificationType[certificationType],
+            Contracts.Region.Colors[color],
+            Contracts.Activity.enums.Activities[activity],
+            {from: pubKey}
+            );
         res.status(200).json({
             status: true,
             data: {
