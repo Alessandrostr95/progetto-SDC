@@ -47,7 +47,7 @@ let App = {
     });
   },
 
-  mintCertification: function (qrcode) {
+  mintCertification: async function (qrcode) {
     // web3.eth.getAccounts(function (error, accounts) {
     const accounts = web3.eth.accounts;
     if (accounts == undefined) {
@@ -55,34 +55,34 @@ let App = {
       return false;
     }
     var account = accounts[0];
-
+    const qrcodeString = JSON.stringify(qrcode).trim();
     App.contracts.GreenPassCertification.deployed().then(function (instance) {
-
+      // const contractInstance = await App.contracts.GreenPassCertification.deployed();
       const contractInstance = instance;
-
-      return contractInstance.emitCertification(parseInt(qrcode.tipo_certificazione), JSON.stringify(qrcode), { from: account });
+      if (!App.contracts.GreenPassCertification.isDeployed()) // Faccio una post nel caso metamask crashi
+        alert("Non è stato fatto il deploy del contratto");
+      // const data = {
+      //   "greenpass": qrcodeString,
+      //   "certificationType": qrcode.tipo_certificazione,
+      //   "pubKey": account
+      // }
+      // fetch("http://localhost:30303/api/v1/certification/emitPublic", {
+      //   method: "POST",
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(data)
+      // }).then(res => {
+      //   console.log("Request complete! response:", JSON.stringify(res));
+      // });
+      //   alert("Non deployed");
+      // }
+      return contractInstance.emitCertification(parseInt(qrcode.tipo_certificazione), qrcodeString, { from: account });
     }).then(function (result) {
-      alert(result);
-      return true;
+      alert("Aggiunto correttamente il green pass: " + result);
+      return qrcodeString;
     }).catch(function (err) {
       alert(err.message);
     });
-    // Faccio anche una post nel caso metamask crashi
-    const data = {
-      "greenpass": JSON.stringify(qrcode),
-      "certificationType": qrcode.tipo_certificazione,
-      "pubKey": account
-    }
-    fetch("http://localhost:30303/api/v1/certification/emitPublic", {
-      method: "POST",
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    }).then(res => {
-      console.log("Request complete! response:", JSON.stringify(res));
-    });
-    return JSON.stringify(qrcode);
   }
-
 };
 
 

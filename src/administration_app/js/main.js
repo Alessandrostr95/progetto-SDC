@@ -38,8 +38,8 @@ import mintCertification from "./app.js";
         }
         qrcode.tipo_certificazione = $("#tipo_certificazione")[0].value;
         const status = mintCertification(qrcode);
-        alert("Aggiunto green pass: "+status);
-        return check;
+        status.then((e)=>alert("Green pass emesso correttamente!"));
+        return false;
     });
 
 
