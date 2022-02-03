@@ -18,7 +18,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
   /**
    * @dev mappa `QRCODE` => `GreenPass`
    */
-  mapping (string => GreenPass) private certificates;
+  mapping (string => GreenPass) public certificates;
   
   /**
    * @dev Funzione che genera un certificato di tipo `certificationType` e lo assoccia al suo identificatore `qrcode`.
