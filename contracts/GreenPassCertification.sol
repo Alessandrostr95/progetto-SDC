@@ -154,4 +154,7 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
     else return false;
   }
 
+  function getCertificate(string memory qrcode) public view onlyRole(ADMIN_ROLE) returns (GreenPass memory) {
+    return certificates[qrcode];
+  }
 }
