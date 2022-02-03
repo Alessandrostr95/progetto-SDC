@@ -144,6 +144,30 @@ app.post('/api/v1/certification/emit', async (req, res) => {
     }
 });
 
+app.post('/api/v1/certification/emitPublic', async (req, res) => {
+    try {
+        const data = req.body;
+        const greenpass = data.greenpass;
+        const certificationType = data.certificationType; // deve essere una strunga del tipo "TAMPONE_RAPIDO"
+        const pubKey = data.pubKey;
+
+        const contract = await Contracts.GreenPassCertification.deployed();
+        const transaction = await contract.emitCertification(
+            certificationType,
+            greenpass,
+            {from: pubKey}
+            );
+        res.status(200).json({
+            status: true, 
+            data: {transaction, greenpass, certificationType, pubKey}
+        });
+    } catch (e) {
+        res.status(500).json({
+            error: e.message
+        });
+    }
+});
+
 /**
  * @app Api che consente di assegnare il ruolo di `CERTIFICATION_MINTER_ROLE` ad un address.
  * Tele ruolo permetterà all'address di emettere greenpass.

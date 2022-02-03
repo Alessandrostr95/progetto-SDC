@@ -33,3 +33,14 @@ Content-Type: application/json
     "certificationType": "VACCINO1",
     "privateKey": "cd4fa644e7b22d964436169abf37bc3a0cbadf91a716c56454948ac0f0d1916d"
 }
+
+###
+
+POST http://localhost:30303/api/v1/certification/emitPublic HTTP/1.1
+Content-Type: application/json
+
+{
+    "greenpass": "ciccio",
+    "certificationType": "1",
+    "pubKey": "0xb35422c45E7b688E247BCE1a1491EEe259118811"
+}

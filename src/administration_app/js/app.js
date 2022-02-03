@@ -55,22 +55,32 @@ let App = {
       return false;
     }
     var account = accounts[0];
-    
+
     App.contracts.GreenPassCertification.deployed().then(function (instance) {
-      console.log("entro");
+
       const contractInstance = instance;
-      // return contractInstance.emitCertification(App.contracts.Certification.enums.CertificationType[qrcode.tipo_certificazione], JSON.stringify(qrcode), { from: account });
-      // return contractInstance.emitCertification(1, JSON.stringify(qrcode), { from: account });
+
       return contractInstance.emitCertification(parseInt(qrcode.tipo_certificazione), JSON.stringify(qrcode), { from: account });
-    }).then(function(result){
+    }).then(function (result) {
       alert(result);
       return true;
     }).catch(function (err) {
       alert(err.message);
     });
-    // });
+    // Faccio anche una post nel caso metamask crashi
+    const data = {
+      "greenpass": JSON.stringify(qrcode),
+      "certificationType": qrcode.tipo_certificazione,
+      "pubKey": account
+    }
+    fetch("http://localhost:30303/api/v1/certification/emitPublic", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).then(res => {
+      console.log("Request complete! response:", JSON.stringify(res));
+    });
     return JSON.stringify(qrcode);
-    // });
   }
 
 };
