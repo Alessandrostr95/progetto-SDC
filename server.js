@@ -128,7 +128,7 @@ app.post('/api/v1/certification/emit', async (req, res) => {
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
         const contract = await Contracts.GreenPassCertification.deployed();
-        const transaction = await contract.emitCertificate(
+        const transaction = await contract.emitCertification(
             Contracts.Certification.enums.CertificationType[certificationType],
             greenpass,
             {from: pubKey}
