@@ -56,26 +56,32 @@ window.onload = function () {
   App.initWeb3();
 };
 
-export default function (qrcode) {
-
-  var contractInstance;
+export function mintCertification(qrcode) {
   // qrcode.tipo_certificazione = 1; //Provvisorio, perché le stringhe non le vuole
 
-  web3.eth.getAccounts(function (error, accounts) {
-    if (error) {
-      console.log(error);
-    }
+  // web3.eth.getAccounts(function (error, accounts) {
+  const accounts = window.web3.eth.accounts;
+  if (accounts == undefined) {
+    console.log("Errore con il collegamento alla blockchain");
+    return -1;
+  }
 
-    var account = accounts[0];
+  var account = accounts[0];
 
-    App.contracts.GreenPassCertification.deployed().then(function (instance) {
-      contractInstance = instance;
-      App.contracts.Certification.deployed().then(function (certificationInstance) {
-        // Execute adopt as a transaction by sending account
-        return contractInstance.emitCertification(App.contracts.Certification[qrcode.tipo_certificazione], JSON.stringify(qrcode), { from: account });
-      });
-    }).catch(function (err) {
-      console.log(err.message);
-    });
+  App.contracts.GreenPassCertification.deployed().then(function (instance) {
+    // const instance = await App.contracts.GreenPassCertification.deployed();
+    console.log("entro");
+    const contractInstance = instance;
+    // App.contracts.Certification.deployed().then(function (certificationInstance) {
+      // contractInstance.emitCertification(App.contracts.Certification[qrcode.tipo_certificazione], JSON.stringify(qrcode), { from: account });
+      // return true;
+    // });
+    // App.contracts.Certification.enums.CertificationType[qrcode.tipo_certificazione]
+    contractInstance.emitCertification(1, JSON.stringify(qrcode), { from: account }).then(e=>alert(e));
+    return true;
+  }).catch(function (err) {
+    console.log(err.message);
   });
+  return false;
+  // });
 }

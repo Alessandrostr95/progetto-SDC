@@ -1,7 +1,6 @@
-import mintCertification from "./app.js";
-
+import {mintCertification} from "./app.js";
 (function ($) {
-    "use strict";
+    // "use strict";
 
     /*======================================== [Load select values] */
     loadSelectOptions();
@@ -24,7 +23,7 @@ import mintCertification from "./app.js";
     [ Validate ]*/
     var input = $('.validate-input .input100');
 
-    $('.validate-form').on('submit', function () {
+    $('.validate-form').on('submit', async function () {
         const qrcode = {};
         var check = true;
 
@@ -37,7 +36,8 @@ import mintCertification from "./app.js";
                 qrcode[input[i].name] = input[i].value;
         }
         qrcode.tipo_certificazione = $("#tipo_certificazione")[0].value;
-        mintCertification(qrcode);
+        const status = mintCertification(qrcode);
+        alert(status);
         return check;
     });
 
