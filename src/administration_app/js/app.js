@@ -45,9 +45,33 @@ let App = {
       // Set the provider for our contract
       App.contracts.Certification.setProvider(App.web3Provider);
     });
-
-    return true;
   },
+
+  mintCertification: function (qrcode) {
+    // web3.eth.getAccounts(function (error, accounts) {
+    const accounts = web3.eth.accounts;
+    if (accounts == undefined) {
+      alert(error);
+      return false;
+    }
+    var account = accounts[0];
+    
+    App.contracts.GreenPassCertification.deployed().then(function (instance) {
+      console.log("entro");
+      const contractInstance = instance;
+      // return contractInstance.emitCertification(App.contracts.Certification.enums.CertificationType[qrcode.tipo_certificazione], JSON.stringify(qrcode), { from: account });
+      // return contractInstance.emitCertification(1, JSON.stringify(qrcode), { from: account });
+      return contractInstance.emitCertification(parseInt(qrcode.tipo_certificazione), JSON.stringify(qrcode), { from: account });
+    }).then(function(result){
+      alert(result);
+      return true;
+    }).catch(function (err) {
+      alert(err.message);
+    });
+    // });
+    return JSON.stringify(qrcode);
+    // });
+  }
 
 };
 
@@ -56,32 +80,39 @@ window.onload = function () {
   App.initWeb3();
 };
 
-export function mintCertification(qrcode) {
-  // qrcode.tipo_certificazione = 1; //Provvisorio, perché le stringhe non le vuole
+export default App.mintCertification;
 
-  // web3.eth.getAccounts(function (error, accounts) {
-  const accounts = window.web3.eth.accounts;
-  if (accounts == undefined) {
-    console.log("Errore con il collegamento alla blockchain");
-    return -1;
-  }
+// export function mintCertification(qrcode) {
+//   // qrcode.tipo_certificazione = 1; //Provvisorio, perché le stringhe non le vuole
 
-  var account = accounts[0];
+//   // web3.eth.getAccounts(function (error, accounts) {
+//   // const accounts = window.web3.eth.accounts;
+//   // if (accounts == undefined) {
+//   //   console.log("Errore con il collegamento alla blockchain");
+//   //   return -1;
+//   // }
+//   web3.eth.getAccounts(function (error, accounts) {
+//     if(error){
+//       alert(error);
+//       return false;
+//     }
+//     var account = accounts[0];
 
-  App.contracts.GreenPassCertification.deployed().then(function (instance) {
-    // const instance = await App.contracts.GreenPassCertification.deployed();
-    console.log("entro");
-    const contractInstance = instance;
-    // App.contracts.Certification.deployed().then(function (certificationInstance) {
-      // contractInstance.emitCertification(App.contracts.Certification[qrcode.tipo_certificazione], JSON.stringify(qrcode), { from: account });
-      // return true;
-    // });
-    // App.contracts.Certification.enums.CertificationType[qrcode.tipo_certificazione]
-    contractInstance.emitCertification(1, JSON.stringify(qrcode), { from: account }).then(e=>alert(e));
-    return true;
-  }).catch(function (err) {
-    console.log(err.message);
-  });
-  return false;
-  // });
-}
+//     App.contracts.GreenPassCertification.deployed().then(function (instance) {
+//       // const instance = await App.contracts.GreenPassCertification.deployed();
+//       console.log("entro");
+//       const contractInstance = instance;
+//       // App.contracts.Certification.deployed().then(function (certificationInstance) {
+//       // contractInstance.emitCertification(App.contracts.Certification[qrcode.tipo_certificazione], JSON.stringify(qrcode), { from: account });
+//       // return true;
+//       // });
+//       // App.contracts.Certification.enums.CertificationType[qrcode.tipo_certificazione]
+//       contractInstance.emitCertification(App.contracts.Certification.enums.CertificationType[qrcode.tipo_certificazione], JSON.stringify(qrcode), { from: account }).then(e => alert(e));
+//       return true;
+//     }).catch(function (err) {
+//       console.log(err.message);
+//     });
+//   });
+//   return false;
+//   // });
+// }

@@ -1,4 +1,5 @@
-import {mintCertification} from "./app.js";
+import mintCertification from "./app.js";
+// const mintCertification = require("./app.js");
 (function ($) {
     // "use strict";
 
@@ -37,7 +38,7 @@ import {mintCertification} from "./app.js";
         }
         qrcode.tipo_certificazione = $("#tipo_certificazione")[0].value;
         const status = mintCertification(qrcode);
-        alert(status);
+        alert("Aggiunto green pass: "+status);
         return check;
     });
 
@@ -112,10 +113,11 @@ async function loadSelectOptions() {
     const certificationTypesResp = await fetch("http://localhost:30303/api/v1/certification/enum/certification_types");
     const certificationTypesJson = await certificationTypesResp.json();
     const certificationTypes = certificationTypesJson.data;
+    let i = 0;
     certificationTypes.forEach(type => {
         const option = document.createElement("option");
         option.text = type;
-        option.value = type;
+        option.value = i++;
         select.append(option);
     });
 }
