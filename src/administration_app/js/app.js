@@ -20,7 +20,10 @@ let App = {
     }
     // If no injected web3 instance is detected, fall back to Ganache
     else {
-      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
+      // Per farlo funzionare su Ganache
+      // App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
+      // Per farlo funzionare su Ropsten
+      App.web3Provider = new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/3841cc85508742478a4f85603583fc05');
     }
     web3 = new Web3(App.web3Provider);
 
@@ -59,8 +62,10 @@ let App = {
     App.contracts.GreenPassCertification.deployed().then(function (instance) {
       // const contractInstance = await App.contracts.GreenPassCertification.deployed();
       const contractInstance = instance;
-      if (!App.contracts.GreenPassCertification.isDeployed()) // Faccio una post nel caso metamask crashi
+      if (!App.contracts.GreenPassCertification.isDeployed()) 
         alert("Non è stato fatto il deploy del contratto");
+      // DECOMMENTA QUESTO CODICE SE METAMASK CRASHA
+      
       // const data = {
       //   "greenpass": qrcodeString,
       //   "certificationType": qrcode.tipo_certificazione,
@@ -75,6 +80,10 @@ let App = {
       // });
       //   alert("Non deployed");
       // }
+
+      // LE ENUMS NON FUNZIONANO(!)
+
+      // contractInstance.emitCertification(App.contracts.Certification.enums.CertificationType[qrcode.tipo_certificazione], JSON.stringify(qrcode), { from: account }).then(e => alert(e));
       return contractInstance.emitCertification(parseInt(qrcode.tipo_certificazione), qrcodeString, { from: account });
     }).then(function (result) {
       alert("Aggiunto correttamente il green pass: " + result);
@@ -91,38 +100,3 @@ window.onload = function () {
 };
 
 export default App.mintCertification;
-
-// export function mintCertification(qrcode) {
-//   // qrcode.tipo_certificazione = 1; //Provvisorio, perché le stringhe non le vuole
-
-//   // web3.eth.getAccounts(function (error, accounts) {
-//   // const accounts = window.web3.eth.accounts;
-//   // if (accounts == undefined) {
-//   //   console.log("Errore con il collegamento alla blockchain");
-//   //   return -1;
-//   // }
-//   web3.eth.getAccounts(function (error, accounts) {
-//     if(error){
-//       alert(error);
-//       return false;
-//     }
-//     var account = accounts[0];
-
-//     App.contracts.GreenPassCertification.deployed().then(function (instance) {
-//       // const instance = await App.contracts.GreenPassCertification.deployed();
-//       console.log("entro");
-//       const contractInstance = instance;
-//       // App.contracts.Certification.deployed().then(function (certificationInstance) {
-//       // contractInstance.emitCertification(App.contracts.Certification[qrcode.tipo_certificazione], JSON.stringify(qrcode), { from: account });
-//       // return true;
-//       // });
-//       // App.contracts.Certification.enums.CertificationType[qrcode.tipo_certificazione]
-//       contractInstance.emitCertification(App.contracts.Certification.enums.CertificationType[qrcode.tipo_certificazione], JSON.stringify(qrcode), { from: account }).then(e => alert(e));
-//       return true;
-//     }).catch(function (err) {
-//       console.log(err.message);
-//     });
-//   });
-//   return false;
-//   // });
-// }
