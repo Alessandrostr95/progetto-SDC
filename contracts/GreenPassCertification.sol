@@ -146,9 +146,8 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
       return false;
     }
     
-    Colors regionColors = colors[region];
-    Rule memory rule = Rule(greenPass.certificationType, regionColors, activity);
-    bytes32 key = keccak256( abi.encodePacked(rule.certificationType, rule.color, rule.activity) );
+    Colors regionColor = colors[region];
+    bytes32 key = keccak256( abi.encodePacked(greenPass.certificationType, regionColor, activity) );
     
     if ( EnumerableSet.contains(_rulesSet, key) ) return true;
     else return false;
