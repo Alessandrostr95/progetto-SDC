@@ -18,7 +18,7 @@ POST http://localhost:30303/api/v1/certification/canDo HTTP/1.1
 content-type: application/json
 
 {
-    "greenpass": "{\"tipo_certificazione\":\"0\"}",
+    "greenpass": "{\"tipo_certificazione\":\"4\"}",
     "activity": "MEZZI_PUBBLICI",
     "region": "BASILICATA"
 }
