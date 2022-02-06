@@ -1,7 +1,22 @@
 require("dotenv").config();
 
 const Web3 = require('web3');
-const web3 = new Web3(new Web3.providers.HttpProvider(`http://${process.env.HOST}:${process.env.PORT}`));
+var web3;
+
+switch (process.argv[2]) {
+    case "ropsten":
+        const truffle_config = require('./truffle-config');
+        web3 = new Web3( truffle_config.networks.ropsten.provider() );
+        break;
+    case "dev":
+        web3 = new Web3(new Web3.providers.HttpProvider(`http://${process.env.HOST}:${process.env.PORT}`));
+        break;
+    default:
+        //web3 = new Web3(new Web3.providers.HttpProvider(process.env.ROPSTEN_HOST));
+        console.log("Usage: node server.js <network>");
+        console.log("Network: [ropsten|dev]");
+        process.exit(1);
+}
 global.web3 = web3;
 const Contracts = require('./src/models/contract');
 
@@ -26,7 +41,8 @@ app.post('/api/v1/certification/canDo', async (req, res) => {
         const activity = certification.activity;    // deve essere una stringa del tipo "MEZZI_PUBBLICI"
         const region = certification.region;        // deve essere una stringa del tipo "LOMBARDIA"
 
-        const contract = await Contracts.GreenPassCertification.deployed();
+        //const contract = await Contracts.GreenPassCertification.deployed();
+        const contract = await getDeployedContract();
         const canDo = await contract.canDo(
             greenpass,
             Contracts.Activity.enums.Activities[activity],
@@ -127,7 +143,7 @@ app.post('/api/v1/certification/emit', async (req, res) => {
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
-        const contract = await Contracts.GreenPassCertification.deployed();
+        const contract = await getDeployedContract();
         const transaction = await contract.emitCertification(
             Contracts.Certification.enums.CertificationType[certificationType],
             greenpass,
@@ -151,7 +167,7 @@ app.post('/api/v1/certification/emitPublic', async (req, res) => {
         const certificationType = data.certificationType; // deve essere una strunga del tipo "TAMPONE_RAPIDO"
         const pubKey = data.pubKey;
 
-        const contract = await Contracts.GreenPassCertification.deployed();
+        const contract = await getDeployedContract();
         const transaction = await contract.emitCertification(
             certificationType,
             greenpass,
@@ -183,7 +199,8 @@ app.post('/api/v1/privileges/grat/certification_minter_role', async (req, res) =
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
-        const contract = await Contracts.GreenPassCertification.deployed();
+        //const contract = await Contracts.GreenPassCertification.deployed();
+        const contract = await getDeployedContract();
         const transaction = await contract.grantCertificationMinterRole(to, {from: pubKey});
         res.status(200).json({
             status: true,
@@ -216,7 +233,8 @@ app.post('/api/v1/privileges/revoke/certification_minter_role', async (req, res)
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
-        const contract = await Contracts.GreenPassCertification.deployed();
+        //const contract = await Contracts.GreenPassCertification.deployed();
+        const contract = await getDeployedContract();
         const transaction = await contract.revokeCertificationMinterRole(to, {from: pubKey});
         res.status(200).json({
             status: true,
@@ -251,7 +269,8 @@ app.post('/api/v1/privileges/grat/public_administration_role', async (req, res) 
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
-        const contract = await Contracts.GreenPassCertification.deployed();
+        //const contract = await Contracts.GreenPassCertification.deployed();
+        const contract = await getDeployedContract();
         const transaction = await contract.grantPublicAdministrationRole(to, {from: pubKey});
         res.status(200).json({
             status: true,
@@ -284,7 +303,8 @@ app.post('/api/v1/privileges/revoke/public_administration_role', async (req, res
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
-        const contract = await Contracts.GreenPassCertification.deployed();
+        //const contract = await Contracts.GreenPassCertification.deployed();
+        const contract = await getDeployedContract();
         const transaction = await contract.revokePublicAdministrationRole(to, {from: pubKey});
         res.status(200).json({
             status: true,
@@ -317,7 +337,8 @@ app.post('/api/v1/administration/region/set_color', async (req, res) => {
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
-        const contract = await Contracts.GreenPassCertification.deployed();
+        //const contract = await Contracts.GreenPassCertification.deployed();
+        const contract = await getDeployedContract();
         const transaction = await contract.setRegionColor(
             Contracts.Region.enums.Regions[region],
             Contracts.Region.enums.Colors[color],
@@ -356,7 +377,8 @@ app.post('/api/v1/administration/rules/add', async (req, res) => {
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
-        const contract = await Contracts.GreenPassCertification.deployed();
+        //const contract = await Contracts.GreenPassCertification.deployed();
+        const contract = await getDeployedContract();
         const transaction = await contract.addRule(
             Contracts.Certification.enums.CertificationType[certificationType],
             Contracts.Region.Colors[color],
@@ -397,7 +419,8 @@ app.post('/api/v1/administration/rules/remove', async (req, res) => {
         const privateKey = data.privateKey;
 
         const pubKey = web3.eth.accounts.privateKeyToAccount(privateKey).address;
-        const contract = await Contracts.GreenPassCertification.deployed();
+        //const contract = await Contracts.GreenPassCertification.deployed();
+        const contract = await getDeployedContract();
         const transaction = await contract.removeRule(
             Contracts.Certification.enums.CertificationType[certificationType],
             Contracts.Region.Colors[color],
@@ -420,5 +443,13 @@ app.post('/api/v1/administration/rules/remove', async (req, res) => {
         });
     }
 });
+
+async function getDeployedContract() {
+    try {
+        return await Contracts.GreenPassCertification.deployed();
+    } catch (e) {
+        return await Contracts.GreenPassCertification.at(process.env.CONTRACT_ADDR);
+    }
+}
 
 app.listen(process.env.LISTEN_PORT, () => { console.log(`Hi! I'm listening on port ${process.env.LISTEN_PORT}`) });
