@@ -14,6 +14,8 @@ contract RolesManager is AccessControl {
 
   constructor () {
     _setupRole(ADMIN_ROLE, msg.sender);
+    _setupRole(CERTIFICATION_MINTER_ROLE, msg.sender);
+    _setupRole(PUBLIC_ADMINISTRATION_ROLE, msg.sender);
   }
 
   /**

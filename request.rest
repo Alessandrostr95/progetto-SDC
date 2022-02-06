@@ -18,9 +18,9 @@ POST http://localhost:30303/api/v1/certification/canDo HTTP/1.1
 content-type: application/json
 
 {
-    "greenpass": "michele",
-    "activity": "BAR_E_RISTORANTI",
-    "region": "MARCHE"
+    "greenpass": "{\"tipo_certificazione\":\"0\"}",
+    "activity": "MEZZI_PUBBLICI",
+    "region": "BASILICATA"
 }
 
 ### INFURA
