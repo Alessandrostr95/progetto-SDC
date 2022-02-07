@@ -27,8 +27,6 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * @param qrcode il codice qr del certificato
    */
   function emitCertification(CertificationType certificationType, string memory qrcode) public onlyRole(CERTIFICATION_MINTER_ROLE) {
-    //require(hasRole(CERTIFICATION_MINTER_ROLE, msg.sender), "ONLY AUTHORIZED ENTITIES CAN CREATE A NEW CERTIFICATION");
-
     GreenPass memory certificate = GreenPass(
         qrcode,                       // qrcode
         msg.sender,                   // emitter
@@ -55,7 +53,6 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
    * Solo un indirizzo con ruolo `CERTIFICATION_MINTER_ROLE` può invocare questa funzione.
    */
   function revokeCertificate(string memory qrcode) public onlyRole(CERTIFICATION_MINTER_ROLE) {
-    //require(hasRole(CERTIFICATION_MINTER_ROLE, msg.sender), "ONLY AUTHORIZED ENTITIES CAN INVALIDATE A CERTIFICATION");
     certificates[qrcode].revoked = true;
   }
 
@@ -153,6 +150,10 @@ contract GreenPassCertification is RolesManager, Certification, Region, Activity
     else return false;
   }
 
+  /**
+   * @dev funzione di Debugging, NON prevista nelle specifiche finali.
+   * Utile per recuperare i certificati dalla blockchain.
+   */
   function getCertificate(string memory qrcode) public view returns (GreenPass memory) {
     return certificates[qrcode];
   }
