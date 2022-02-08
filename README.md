@@ -12,3 +12,6 @@ Lo strumento in questione è sviluppato sottoforma di smart-contract ethereum, e
 Inoltre la creazione di nuove certificazioni è autorizzata solamente a specifici utenti (es. medici, asl, farmacisti, ...), garantendo così l'originalità dei greenpass.
 
 Infine il proprietario dello smart-constract (lo stato), ha la possibilità di definire e modificare i colori delle regioni, e anche di poter assegnare o revocare il permesso al rilascio di greenpass.
+
+## Interfaccia utente
+<img src="https://github.com/Alessandrostr95/progetto-SDC/raw/main/presentazione_app.gif" height="600"/>
